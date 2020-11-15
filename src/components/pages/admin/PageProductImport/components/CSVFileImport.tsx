@@ -31,6 +31,13 @@ export default function CSVFileImport({url, title}: CSVFileImportProps) {
   };
 
   const uploadFile = async (e: any) => {
+    // if (file.type !== 'text/csv') {
+    //   console.error('Problem with Operation System csv MIME Type');
+    //   console.error(`You system has type ${file.type} for file that you've uploaded`);
+    //   console.error('But program will send header with text/csv mime type forcely');
+    //   console.error('if you use Windows OS - add to registry HKEY_CLASSES_ROOT.csv "Content Type": "text/csv"');
+    //   console.error('look https://stackoverflow.com/questions/51724649/mime-type-of-file-returning-empty-in-javascript-on-some-machines');
+    // }
       // Get the presigned URL
       const response = await axios({
         method: 'GET',
@@ -43,7 +50,10 @@ export default function CSVFileImport({url, title}: CSVFileImportProps) {
       console.log('Uploading to: ', response.data)
       const result = await fetch(response.data, {
         method: 'PUT',
-        body: file
+        body: file,
+        headers: {
+          'Content-type': 'text/csv'
+        }
       })
       console.log('Result: ', result)
       setFile('');
